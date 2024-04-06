@@ -17,8 +17,38 @@ const OP_CODE_SET = [
     pattern: 0x1000,
     mask: 0xf000,
     arguments: [{ mask: 0x0fff }],
-    execute: (cpu, args) => {
+    executeOn: (cpu, args) => {
       cpu.PC = args[0];
+    },
+  },
+  {
+    id: "2NNN",
+    desc: "CALL subroutine",
+    pattern: 0x2000,
+    mask: 0xf000,
+    arguments: [{ mask: 0x0fff }],
+    executeOn: (cpu, args) => {
+      if (cpu.SP === 15) {
+        throw new Error("Stack Overflow");
+      }
+
+      cpu.SP++;
+      cpu.stack[cpu.SP] = cpu.PC + 2;
+      cpu.PC = args[0];
+    },
+  },
+  {
+    id: "00EE",
+    desc: "RETURN from subroutine",
+    pattern: 0x00ee,
+    mask: 0xffff,
+    arguments: [],
+    executeOn: (cpu, args) => {
+      if (cpu.SP === -1) {
+        throw new Error("Stack Underflow");
+      }
+      cpu.PC = cpu.stack[cpu.SP];
+      cpu.SP--;
     },
   },
 ];
@@ -27,7 +57,7 @@ const decode = (opCode) => {
   op = OP_CODE_SET.find((op) => (opCode & op.mask) === op.pattern);
   args = op.arguments.map((arg) => opCode & arg.mask);
 
-  return { op, args };
+  return { instruction: op, withArgs: args };
 };
 
 module.exports = { decode };

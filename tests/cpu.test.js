@@ -25,22 +25,51 @@ describe("CPU tests", () => {
   });
 
   describe("OP Codes tests", () => {
-    test("JUMP_ADDR (1nnn) - Program counter should be set to address in argument", () => {
+    test("JUMP (1nnn) - PC should equals to address in argument", () => {
       cpu.load({ data: [0x1333] });
       cpu.step();
 
       expect(cpu.PC).toBe(0x333);
     });
 
-    /*test("RETURN (00ee) - Program counter should be set to stack pointer, then decrement stack pointer", () => {
-      cpu.SP = 0x2;
-      cpu.stack[0x2] = 0xf;
-
-      cpu.load({ data: [0x00ee] });
+    test("CALL SUBROUTINE (2nnn) - SP increment, PC should equals to address in argument", () => {
+      cpu.load({ data: [0x2123] });
+      const PCCall = cpu.PC;
       cpu.step();
 
-      expect(cpu.PC).toBe(0xf);
-      expect(cpu.SP).toBe(0x1);
-    });*/
+      expect(cpu.SP).toBe(0);
+      // Actual PC point to CALL. We store the next instruction to execute in return of the call so PC + 2 (opcode is 2 bytes long in memory)
+      expect(cpu.stack[cpu.SP]).toBe(PCCall + 2);
+      expect(cpu.PC).toBe(0x123);
+    });
+
+    test("CALL SUBROUTINE (2nnn) - SP is already 15 throw stack overflow", () => {
+      cpu.load({ data: [0x2123] });
+      cpu.SP = 15;
+
+      expect(() => {
+        cpu.step();
+      }).toThrow(new Error("Stack Overflow"));
+    });
+
+    test("RETURN (00ee) - PC is set to stack pointer value, SP is decremented", () => {
+      cpu.load({ data: [0x00ee] });
+      cpu.SP = 1;
+      cpu.stack[0x1] = 0x9;
+
+      cpu.step();
+
+      expect(cpu.PC).toBe(0x9);
+      expect(cpu.SP).toBe(0);
+    });
+
+    test("RETURN (00ee) - SP at -1 throw stack underflow", () => {
+      cpu.load({ data: [0x00ee] });
+      cpu.SP = -1;
+
+      expect(() => {
+        cpu.step();
+      }).toThrow(new Error("Stack Underflow"));
+    });
   });
 });
