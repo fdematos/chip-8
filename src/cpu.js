@@ -2,7 +2,9 @@ const { MEMORY_START } = require("./constants");
 const Instruction = require("./instruction");
 
 class CPU {
-  constructor() {
+  constructor(display) {
+    this.display = display;
+
     this.initialize();
   }
 

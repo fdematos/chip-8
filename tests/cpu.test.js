@@ -1,7 +1,13 @@
 const { CPU } = require("../src/cpu");
-const { MEMORY_START } = require("../src/constants");
+const { InMemoryDisplay } = require("../src/display/InMemoryDisplay");
+const {
+  MEMORY_START,
+  DISPLAY_WIDTH,
+  DISPLAY_HEIGHT,
+} = require("../src/constants");
 
-const cpu = new CPU();
+const display = new InMemoryDisplay();
+const cpu = new CPU(display);
 
 describe("CPU tests", () => {
   describe("Memory test", () => {
@@ -71,5 +77,17 @@ describe("CPU tests", () => {
         cpu.step();
       }).toThrow(new Error("Stack Underflow"));
     });
+  });
+
+  test("CLEAR SCREEN (00e0) - Should clear screen", () => {
+    cpu.load({ data: [0x00e0] });
+    cpu.display.screen[0][0] = 1;
+    cpu.step();
+
+    for (var i = 0; i < DISPLAY_WIDTH; i++) {
+      for (var j = 0; j < DISPLAY_HEIGHT; j++) {
+        expect(cpu.display.screen[i][j]).toBe(0);
+      }
+    }
   });
 });

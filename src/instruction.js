@@ -51,6 +51,16 @@ const OP_CODE_SET = [
       cpu.SP--;
     },
   },
+  {
+    id: "00E0",
+    desc: "CLEAR Screen",
+    pattern: 0x00e0,
+    mask: 0xffff,
+    arguments: [],
+    executeOn: (cpu, args) => {
+      cpu.display.clear();
+    },
+  },
 ];
 
 const decode = (opCode) => {

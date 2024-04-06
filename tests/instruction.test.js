@@ -18,4 +18,10 @@ describe("Decode tests", () => {
     expect(instruction.id).toBe("00EE");
     expect(withArgs.length).toBe(0);
   });
+
+  test("00E0 - CLEAR SCREEN", () => {
+    const { instruction, withArgs } = opcode.decode(0x00e0);
+    expect(instruction.id).toBe("00E0");
+    expect(withArgs.length).toBe(0);
+  });
 });
