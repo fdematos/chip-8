@@ -11,6 +11,14 @@ class InMemoryDisplay {
       new Array(DISPLAY_HEIGHT).fill(0)
     );
   }
+
+  get(x, y) {
+    return this.screen[x][y];
+  }
+
+  set(x, y, value) {
+    this.screen[x][y] = value;
+  }
 }
 
 module.exports = { InMemoryDisplay };

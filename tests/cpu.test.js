@@ -128,4 +128,70 @@ describe("CPU tests", () => {
     expect(cpu.I).toBe(0x333);
     expect(cpu.PC).toBe(PCCall + 2);
   });
+
+  test("DRAW AT - Should display a n byte sprite at coordinates in register x, register y with no collision", () => {
+    cpu.load({ data: [0xd123] });
+    const PCCall = cpu.PC;
+    cpu.V[0x1] = 0;
+    cpu.V[0x2] = 0;
+
+    cpu.memory[0x300] = 0xff;
+    cpu.memory[0x301] = 0xff;
+    cpu.memory[0x302] = 0xff;
+
+    cpu.I = 0x300;
+
+    cpu.step();
+
+    // Check the display buffer for the first 3 rows
+    for (var x = 0; x < 8; x++) {
+      for (var y = 0; y < 3; y++) {
+        expect(cpu.display.get(x, y)).toBe(1);
+      }
+    }
+
+    expect(cpu.V[0xf]).toBe(0);
+    expect(cpu.PC).toBe(PCCall + 2);
+  });
+
+  test("DRAW AT - Should display a n byte sprite at coordinates in register x, register y with collision", () => {
+    cpu.load({ data: [0xd123] });
+    const PCCall = cpu.PC;
+    cpu.V[0x1] = 0;
+    cpu.V[0x2] = 0;
+
+    cpu.memory[0x300] = 0xff;
+    cpu.memory[0x301] = 0xff;
+    cpu.memory[0x302] = 0xff;
+
+    cpu.I = 0x300;
+
+    // create collision
+    cpu.display.set(0, 2, 1);
+
+    cpu.step();
+
+    // Check the display buffer for the first 3 rows
+    for (var x = 0; x < 8; x++) {
+      for (var y = 0; y < 3; y++) {
+        if (x == 0 && y == 2) {
+          expect(cpu.display.get(x, y)).toBe(0);
+        } else {
+          expect(cpu.display.get(x, y)).toBe(1);
+        }
+      }
+    }
+
+    expect(cpu.V[0xf]).toBe(1);
+    expect(cpu.PC).toBe(PCCall + 2);
+  });
+
+  test("DRAW AT - Should throw error if I + sizeInMemory > 4095", () => {
+    cpu.load({ data: [0xd123] });
+    cpu.I = 0xffd;
+
+    expect(() => {
+      cpu.step();
+    }).toThrow(new Error("Memory Overflow"));
+  });
 });

@@ -46,4 +46,13 @@ describe("Decode tests", () => {
     expect(instruction.id).toBe("ANNN");
     expect(withArgs[0]).toBe(0x123);
   });
+
+  test("DXYN - DRAW AT", () => {
+    const { instruction, withArgs } = opcode.decode(0xd123);
+    expect(instruction.id).toBe("DXYN");
+    expect(withArgs.length).toBe(3);
+    expect(withArgs[0]).toBe(0x1);
+    expect(withArgs[1]).toBe(0x2);
+    expect(withArgs[2]).toBe(0x3);
+  });
 });

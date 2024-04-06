@@ -55,6 +55,7 @@ class CPU {
 
   load(rom) {
     this.initialize();
+    this.display.clear();
 
     // Memory is an 8-bit array and opcodes are 16-bit, each opcode take two case in memory
     for (let i = 0; i < rom.data.length; i++) {
