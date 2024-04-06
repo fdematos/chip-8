@@ -18,5 +18,8 @@
   "homepage": "https://github.com/fdematos/gurr8#readme",
   "devDependencies": {
     "jest": "^29.7.0"
+  },
+  "dependencies": {
+    "blessed": "^0.1.81"
   }
 }

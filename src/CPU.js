@@ -1,10 +1,11 @@
-const { MEMORY_START } = require("../constants");
+const { Display } = require("./Display");
+const { MEMORY_START } = require("./constants");
+
 const Instruction = require("./instruction");
 
 class CPU {
-  constructor(display) {
-    this.display = display;
-
+  constructor() {
+    this.display = new Display();
     this.initialize();
   }
 
@@ -53,20 +54,20 @@ class CPU {
     this.PC = MEMORY_START;
   }
 
-  load(rom) {
+  load(romData) {
     this.initialize();
     this.display.clear();
 
     // Memory is an 8-bit array and opcodes are 16-bit, each opcode take two case in memory
-    for (let i = 0; i < rom.data.length; i++) {
+    for (let i = 0; i < romData.length; i++) {
       // take the two first byte (most significant)
-      this.memory[MEMORY_START + 2 * i] = rom.data[i] >> 8;
+      this.memory[MEMORY_START + 2 * i] = romData[i] >> 8;
       // take the two last byte (least significant)
-      this.memory[MEMORY_START + 2 * i + 1] = rom.data[i] & 0x00ff;
+      this.memory[MEMORY_START + 2 * i + 1] = romData[i] & 0x00ff;
     }
   }
 
-  step() {
+  process() {
     const opCode = this.fetch();
     const { instruction, withArgs } = Instruction.decode(opCode);
     instruction.executeOn(this, withArgs);

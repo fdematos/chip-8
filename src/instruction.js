@@ -1,4 +1,4 @@
-const { DISPLAY_WIDTH, DISPLAY_HEIGHT } = require("../constants");
+const { DISPLAY_WIDTH, DISPLAY_HEIGHT } = require("./constants");
 
 /* CHIP-8 has 35 opcodes, which are all two bytes long and stored big-endian.
  The opcodes are listed below, in hexadecimal and with the following symbols:

@@ -1,4 +1,4 @@
-const opcode = require("../src/cpu/instruction");
+const opcode = require("../src/instruction");
 
 describe("Decode tests", () => {
   test("1NNN - JUMP", () => {

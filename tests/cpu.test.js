@@ -1,18 +1,17 @@
-const { CPU } = require("../src/cpu/CPU");
-const { InMemoryDisplay } = require("../src/display/InMemoryDisplay");
+const { CPU } = require("../src/CPU");
+
 const {
   MEMORY_START,
   DISPLAY_WIDTH,
   DISPLAY_HEIGHT,
 } = require("../src/constants");
 
-const display = new InMemoryDisplay();
-const cpu = new CPU(display);
+const cpu = new CPU();
 
 describe("CPU tests", () => {
   describe("Memory test", () => {
-    test("load({data}) -  Should initalize memory with rom data", () => {
-      cpu.load({ data: [0x1333, 0x1fc2] });
+    test("load(romData) -  Should initalize memory with rom data", () => {
+      cpu.load([0x1333, 0x1fc2]);
 
       for (var i = 0; i < MEMORY_START; i++) {
         expect(cpu.memory[i]).toBe(0);
@@ -25,12 +24,12 @@ describe("CPU tests", () => {
     });
 
     test("fetch() - Should return current opcode according to PC", () => {
-      cpu.load({ data: [0x1333, 0x1fc2] });
+      cpu.load([0x1333, 0x1fc2]);
       expect(cpu.fetch()).toBe(0x1333);
     });
 
     test("nextInstruction() - Move to next instruction", () => {
-      cpu.load({ data: [0x1333, 0x1fc2] });
+      cpu.load([0x1333, 0x1fc2]);
       cpu.PC = 0x202;
       cpu.nextInstruction();
       expect(cpu.PC).toBe(0x204);
@@ -39,16 +38,16 @@ describe("CPU tests", () => {
 
   describe("OP Codes tests", () => {
     test("JUMP (1nnn) - PC should equals to address in argument", () => {
-      cpu.load({ data: [0x1333] });
-      cpu.step();
+      cpu.load([0x1333]);
+      cpu.process();
 
       expect(cpu.PC).toBe(0x333);
     });
 
     test("CALL SUBROUTINE (2nnn) - SP increment, PC should equals to address in argument", () => {
-      cpu.load({ data: [0x2123] });
+      cpu.load([0x2123]);
       const PCCall = cpu.PC;
-      cpu.step();
+      cpu.process();
 
       expect(cpu.SP).toBe(0);
       // Actual PC point to CALL. We store the next instruction to execute in return of the call so PC + 2 (opcode is 2 bytes long in memory)
@@ -57,44 +56,44 @@ describe("CPU tests", () => {
     });
 
     test("CALL SUBROUTINE (2nnn) - SP is already 15 throw stack overflow", () => {
-      cpu.load({ data: [0x2123] });
+      cpu.load([0x2123]);
       cpu.SP = 15;
 
       expect(() => {
-        cpu.step();
+        cpu.process();
       }).toThrow(new Error("Stack Overflow"));
     });
 
     test("RETURN (00ee) - PC is set to stack pointer value, SP is decremented", () => {
-      cpu.load({ data: [0x00ee] });
+      cpu.load([0x00ee]);
       cpu.SP = 1;
       cpu.stack[0x1] = 0x9;
 
-      cpu.step();
+      cpu.process();
 
       expect(cpu.PC).toBe(0x9);
       expect(cpu.SP).toBe(0);
     });
 
     test("RETURN (00ee) - SP at -1 throw stack underflow", () => {
-      cpu.load({ data: [0x00ee] });
+      cpu.load([0x00ee]);
       cpu.SP = -1;
 
       expect(() => {
-        cpu.step();
+        cpu.process();
       }).toThrow(new Error("Stack Underflow"));
     });
   });
 
   test("CLEAR SCREEN (00e0) - Should clear screen", () => {
-    cpu.load({ data: [0x00e0] });
-    cpu.display.screen[0][0] = 1;
+    cpu.load([0x00e0]);
+    cpu.display.set(0, 0, 1);
     const PCCall = cpu.PC;
-    cpu.step();
+    cpu.process();
 
-    for (var i = 0; i < DISPLAY_WIDTH; i++) {
-      for (var j = 0; j < DISPLAY_HEIGHT; j++) {
-        expect(cpu.display.screen[i][j]).toBe(0);
+    for (var x = 0; x < DISPLAY_WIDTH; x++) {
+      for (var y = 0; y < DISPLAY_HEIGHT; y++) {
+        expect(cpu.display.get(x, y)).toBe(0);
       }
     }
 
@@ -102,35 +101,35 @@ describe("CPU tests", () => {
   });
 
   test("SET TO Vx (0x6XNN)- Should set value to vx", () => {
-    cpu.load({ data: [0x6a3f] });
+    cpu.load([0x6a3f]);
     const PCCall = cpu.PC;
-    cpu.step();
+    cpu.process();
 
     expect(cpu.V[0xa]).toBe(0x3f);
     expect(cpu.PC).toBe(PCCall + 2);
   });
 
   test("ADD TO Vx (0x7XNN)- Should set value to vx", () => {
-    cpu.load({ data: [0x7a31] });
+    cpu.load([0x7a31]);
     cpu.V[0xa] = 0x2;
     const PCCall = cpu.PC;
-    cpu.step();
+    cpu.process();
 
     expect(cpu.V[0xa]).toBe(0x33);
     expect(cpu.PC).toBe(PCCall + 2);
   });
 
   test("SET REGISTER INDEX (Annn) - I should equals to address in argument", () => {
-    cpu.load({ data: [0xa333] });
+    cpu.load([0xa333]);
     const PCCall = cpu.PC;
-    cpu.step();
+    cpu.process();
 
     expect(cpu.I).toBe(0x333);
     expect(cpu.PC).toBe(PCCall + 2);
   });
 
   test("DRAW AT - Should display a n byte sprite at coordinates in register x, register y with no collision", () => {
-    cpu.load({ data: [0xd123] });
+    cpu.load([0xd123]);
     const PCCall = cpu.PC;
     cpu.V[0x1] = 0;
     cpu.V[0x2] = 0;
@@ -141,7 +140,7 @@ describe("CPU tests", () => {
 
     cpu.I = 0x300;
 
-    cpu.step();
+    cpu.process();
 
     // Check the display buffer for the first 3 rows
     for (var x = 0; x < 8; x++) {
@@ -155,7 +154,7 @@ describe("CPU tests", () => {
   });
 
   test("DRAW AT - Should display a n byte sprite at coordinates in register x, register y with collision", () => {
-    cpu.load({ data: [0xd123] });
+    cpu.load([0xd123]);
     const PCCall = cpu.PC;
     cpu.V[0x1] = 0;
     cpu.V[0x2] = 0;
@@ -169,7 +168,7 @@ describe("CPU tests", () => {
     // create collision
     cpu.display.set(0, 2, 1);
 
-    cpu.step();
+    cpu.process();
 
     // Check the display buffer for the first 3 rows
     for (var x = 0; x < 8; x++) {
@@ -187,11 +186,11 @@ describe("CPU tests", () => {
   });
 
   test("DRAW AT - Should throw error if I + sizeInMemory > 4095", () => {
-    cpu.load({ data: [0xd123] });
+    cpu.load([0xd123]);
     cpu.I = 0xffd;
 
     expect(() => {
-      cpu.step();
+      cpu.process();
     }).toThrow(new Error("Memory Overflow"));
   });
 });
