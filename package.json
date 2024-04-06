@@ -2,9 +2,10 @@
   "name": "gurr8",
   "version": "1.0.0",
   "description": "A chip 8 emulator",
-  "main": "index.js",
+  "main": "run.js",
   "scripts": {
-    "test": "jest"
+    "test": "jest",
+    "start": "node run.js"
   },
   "repository": {
     "type": "git",

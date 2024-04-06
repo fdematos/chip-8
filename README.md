@@ -14,6 +14,12 @@ npm install
 npm test
 ```
 
+## Launch
+
+```sh
+npm start
+```
+
 ## Resources
 
 - [Guide to making a CHIP-8 emulator
