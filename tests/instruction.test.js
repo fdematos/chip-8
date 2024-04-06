@@ -1,4 +1,4 @@
-const opcode = require("../src/instruction");
+const opcode = require("../src/cpu/instruction");
 
 describe("Decode tests", () => {
   test("1NNN - JUMP", () => {
@@ -23,5 +23,27 @@ describe("Decode tests", () => {
     const { instruction, withArgs } = opcode.decode(0x00e0);
     expect(instruction.id).toBe("00E0");
     expect(withArgs.length).toBe(0);
+  });
+
+  test("6XNN - SET VALUE TO REGISTER", () => {
+    const { instruction, withArgs } = opcode.decode(0x6312);
+    expect(instruction.id).toBe("6XNN");
+    expect(withArgs.length).toBe(2);
+    expect(withArgs[0]).toBe(0x3);
+    expect(withArgs[1]).toBe(0x12);
+  });
+
+  test("7XNN - ADD VALUE TO REGISTER", () => {
+    const { instruction, withArgs } = opcode.decode(0x7acf);
+    expect(instruction.id).toBe("7XNN");
+    expect(withArgs.length).toBe(2);
+    expect(withArgs[0]).toBe(0xa);
+    expect(withArgs[1]).toBe(0xcf);
+  });
+
+  test("ANNN - SET INDEX REGISTER", () => {
+    const { instruction, withArgs } = opcode.decode(0xa123);
+    expect(instruction.id).toBe("ANNN");
+    expect(withArgs[0]).toBe(0x123);
   });
 });

@@ -1,4 +1,4 @@
-const { CPU } = require("../src/cpu");
+const { CPU } = require("../src/cpu/CPU");
 const { InMemoryDisplay } = require("../src/display/InMemoryDisplay");
 const {
   MEMORY_START,
@@ -24,9 +24,16 @@ describe("CPU tests", () => {
       expect(cpu.memory[MEMORY_START + 3]).toBe(0xc2);
     });
 
-    test("opcode() - Should return current opcode according to PC", () => {
+    test("fetch() - Should return current opcode according to PC", () => {
       cpu.load({ data: [0x1333, 0x1fc2] });
-      expect(cpu.opCode()).toBe(0x1333);
+      expect(cpu.fetch()).toBe(0x1333);
+    });
+
+    test("nextInstruction() - Move to next instruction", () => {
+      cpu.load({ data: [0x1333, 0x1fc2] });
+      cpu.PC = 0x202;
+      cpu.nextInstruction();
+      expect(cpu.PC).toBe(0x204);
     });
   });
 
@@ -82,6 +89,7 @@ describe("CPU tests", () => {
   test("CLEAR SCREEN (00e0) - Should clear screen", () => {
     cpu.load({ data: [0x00e0] });
     cpu.display.screen[0][0] = 1;
+    const PCCall = cpu.PC;
     cpu.step();
 
     for (var i = 0; i < DISPLAY_WIDTH; i++) {
@@ -89,5 +97,35 @@ describe("CPU tests", () => {
         expect(cpu.display.screen[i][j]).toBe(0);
       }
     }
+
+    expect(cpu.PC).toBe(PCCall + 2);
+  });
+
+  test("SET TO Vx (0x6XNN)- Should set value to vx", () => {
+    cpu.load({ data: [0x6a3f] });
+    const PCCall = cpu.PC;
+    cpu.step();
+
+    expect(cpu.V[0xa]).toBe(0x3f);
+    expect(cpu.PC).toBe(PCCall + 2);
+  });
+
+  test("ADD TO Vx (0x7XNN)- Should set value to vx", () => {
+    cpu.load({ data: [0x7a31] });
+    cpu.V[0xa] = 0x2;
+    const PCCall = cpu.PC;
+    cpu.step();
+
+    expect(cpu.V[0xa]).toBe(0x33);
+    expect(cpu.PC).toBe(PCCall + 2);
+  });
+
+  test("SET REGISTER INDEX (Annn) - I should equals to address in argument", () => {
+    cpu.load({ data: [0xa333] });
+    const PCCall = cpu.PC;
+    cpu.step();
+
+    expect(cpu.I).toBe(0x333);
+    expect(cpu.PC).toBe(PCCall + 2);
   });
 });
