@@ -1,3 +1,5 @@
+const fs = require("fs");
+
 const decode = (data) => {
   const buffer = data;
   const romData = [];
@@ -9,6 +11,14 @@ const decode = (data) => {
   return romData;
 };
 
+const loadFromFile = (path) => {
+  const fileContents = fs.readFileSync(path);
+  if (!fileContents) throw new Error("File not found");
+
+  return decode(fileContents);
+};
+
 module.exports = {
   decode,
+  loadFromFile,
 };

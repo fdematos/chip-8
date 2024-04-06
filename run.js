@@ -1,20 +1,16 @@
-const fs = require("fs");
 const blessed = require("blessed");
 
 const { CPU } = require("./src/CPU");
 const rom = require("./src/rom");
 const { DISPLAY_WIDTH, DISPLAY_HEIGHT } = require("./src/constants");
 
-const cpu = new CPU();
-
 const screen = blessed.screen({ smartCSR: true });
 screen.title = "Chip8.js";
 color = blessed.helpers.attrToBinary({ fg: "#33ff66" });
 
-const fileContents = fs.readFileSync("./roms/IBMLogo.ch8");
-if (!fileContents) throw new Error("File not found");
+const romData = rom.loadFromFile("./roms/IBMLogo.ch8");
 
-const romData = rom.decode(fileContents);
+const cpu = new CPU();
 cpu.load(romData);
 
 function loop() {
