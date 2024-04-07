@@ -5,7 +5,7 @@
   "main": "run.js",
   "scripts": {
     "test": "jest",
-    "start": "node run.js"
+    "start": "node chip-8.js"
   },
   "repository": {
     "type": "git",
