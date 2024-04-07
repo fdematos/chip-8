@@ -87,13 +87,13 @@ describe("CPU tests", () => {
 
   test("CLEAR SCREEN (00e0) - Should clear screen", () => {
     cpu.load([0x00e0]);
-    cpu.display.set(0, 0, 1);
+    cpu.setPixel(0, 0, 1);
     const PCCall = cpu.PC;
     cpu.process();
 
     for (var x = 0; x < DISPLAY_WIDTH; x++) {
       for (var y = 0; y < DISPLAY_HEIGHT; y++) {
-        expect(cpu.display.get(x, y)).toBe(0);
+        expect(cpu.getPixel(x, y)).toBe(0);
       }
     }
 
@@ -145,7 +145,7 @@ describe("CPU tests", () => {
     // Check the display buffer for the first 3 rows
     for (var x = 0; x < 8; x++) {
       for (var y = 0; y < 3; y++) {
-        expect(cpu.display.get(x, y)).toBe(1);
+        expect(cpu.getPixel(x, y)).toBe(1);
       }
     }
 
@@ -166,7 +166,7 @@ describe("CPU tests", () => {
     cpu.I = 0x300;
 
     // create collision
-    cpu.display.set(0, 2, 1);
+    cpu.setPixel(0, 2, 1);
 
     cpu.process();
 
@@ -174,9 +174,9 @@ describe("CPU tests", () => {
     for (var x = 0; x < 8; x++) {
       for (var y = 0; y < 3; y++) {
         if (x == 0 && y == 2) {
-          expect(cpu.display.get(x, y)).toBe(0);
+          expect(cpu.getPixel(x, y)).toBe(0);
         } else {
-          expect(cpu.display.get(x, y)).toBe(1);
+          expect(cpu.getPixel(x, y)).toBe(1);
         }
       }
     }

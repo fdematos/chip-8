@@ -1,11 +1,9 @@
-const { Display } = require("./Display");
-const { MEMORY_START } = require("./constants");
+const { MEMORY_START, DISPLAY_HEIGHT, DISPLAY_WIDTH } = require("./constants");
 
 const Instruction = require("./instruction");
 
 class CPU {
   constructor() {
-    this.display = new Display();
     this.initialize();
   }
 
@@ -52,11 +50,12 @@ class CPU {
      * The PC increments by 2 after executing each instruction because Chip-8 instructions are coded in 2 bytes.
      */
     this.PC = MEMORY_START;
+
+    this.clearDisplay();
   }
 
   load(romData) {
     this.initialize();
-    this.display.clear();
 
     // Memory is an 8-bit array and opcodes are 16-bit, each opcode take two case in memory
     for (let i = 0; i < romData.length; i++) {
@@ -83,6 +82,21 @@ class CPU {
 
   fetch() {
     return (this.memory[this.PC] << 8) | this.memory[this.PC + 1];
+  }
+
+  // Display Management
+  clearDisplay() {
+    this.buffer = Array.from(Array(DISPLAY_WIDTH), () =>
+      new Array(DISPLAY_HEIGHT).fill(0)
+    );
+  }
+
+  getPixel(x, y) {
+    return this.buffer[x][y];
+  }
+
+  setPixel(x, y, value) {
+    this.buffer[x][y] = value;
   }
 }
 

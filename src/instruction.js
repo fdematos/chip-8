@@ -73,7 +73,7 @@ const OP_CODES = [
     arguments: [],
     // CLEAR Screen
     executeOn: (cpu, args) => {
-      cpu.display.clear();
+      cpu.clearDisplay();
     },
   },
   {
@@ -154,7 +154,7 @@ const OP_CODES = [
           // y modulo DISPLAY_HEIGHT (Screen Wrapping)
           let y = (startY + row) & (DISPLAY_HEIGHT - 1);
 
-          const currentPixel = cpu.display.get(x, y);
+          const currentPixel = cpu.getPixel(x, y);
 
           /**
            * Perform a bitwise XOR between spritePixel and currentPixel.
@@ -170,7 +170,7 @@ const OP_CODES = [
             cpu.V[0xf] = 1;
           }
 
-          cpu.display.set(x, y, newPixel);
+          cpu.setPixel(x, y, newPixel);
         }
       }
     },
