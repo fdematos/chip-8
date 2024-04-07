@@ -207,4 +207,11 @@ describe("Decode tests", () => {
     expect(withArgs.length).toBe(1);
     expect(withArgs[0]).toBe(0x1);
   });
+
+  test("FX1E - ADD VX to I", () => {
+    const { instruction, withArgs } = opcode.decode(0xf11e);
+    expect(instruction.id).toBe("FX1E");
+    expect(withArgs.length).toBe(1);
+    expect(withArgs[0]).toBe(0x1);
+  });
 });

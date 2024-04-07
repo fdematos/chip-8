@@ -499,5 +499,29 @@ describe("CPU tests", () => {
       expect(cpu.ST).toBe(cpu.V[0xa]);
       expect(cpu.PC).toBe(PCCall + 2);
     });
+
+    test("FX1E - ADD VX TO I - Should add Vx to I, VF = 0 because no overflow", () => {
+      cpu.load([0xfa1e]);
+      cpu.V[0xa] = 0x3;
+      cpu.I = 0x3;
+      const PCCall = cpu.PC;
+
+      cpu.process();
+      expect(cpu.I).toBe(0x3 + 0x3);
+      expect(cpu.V[0xf]).toBe(0x0);
+      expect(cpu.PC).toBe(PCCall + 2);
+    });
+
+    test("FX1E - ADD VX TO I - Should add Vx to I, VF = 1 because overflow", () => {
+      cpu.load([0xfa1e]);
+      cpu.V[0xa] = 0xff;
+      cpu.I = 0xffff;
+      const PCCall = cpu.PC;
+
+      cpu.process();
+      expect(cpu.I).toBe(0xfe);
+      expect(cpu.V[0xf]).toBe(0x1);
+      expect(cpu.PC).toBe(PCCall + 2);
+    });
   });
 });
