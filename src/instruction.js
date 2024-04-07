@@ -12,15 +12,8 @@ I : 12bit register (For memory address) (Similar to void pointer);
 VN: One of the 16 available variables. N may be 0 to F (hexadecimal);
 */
 
-const OP_WITH_IMPACT_ON_PC = [
-  "1NNN",
-  "2NNN",
-  "00EE",
-  "BNNN",
-  "9XY0",
-  "EX9E",
-  "EXA1",
-];
+// DO NOT MOVE TO NEXT THE INSTRUCTION AFTER THOSE OPCODES
+const OP_WITH_IMPACT_ON_PC = ["1NNN", "2NNN", "00EE", "BNNN", "EX9E", "EXA1"];
 
 const OP_CODES = [
   {
@@ -258,6 +251,22 @@ const OP_CODES = [
   },
 
   {
+    id: "9XY0",
+    pattern: 0x9000,
+    mask: 0xf00f,
+    arguments: [
+      { mask: 0x0f00, shift: 8 },
+      { mask: 0x00f0, shift: 4 },
+    ],
+    // IF VX not equals VY then skip
+    executeOn: (cpu, args) => {
+      if (cpu.V[args[0]] != cpu.V[args[1]]) {
+        cpu.nextInstruction();
+      }
+    },
+  },
+
+  {
     id: "ANNN",
     pattern: 0xa000,
     mask: 0xf000,
@@ -267,6 +276,30 @@ const OP_CODES = [
       cpu.I = args[0];
     },
   },
+
+  {
+    id: "BNNN",
+    pattern: 0xb000,
+    mask: 0xf000,
+    arguments: [{ mask: 0x0fff }],
+    // PC = V0 + NNN
+    executeOn: (cpu, args) => {
+      cpu.PC = cpu.V[0x0] + args[0];
+    },
+  },
+
+  {
+    id: "CXNN",
+    pattern: 0xc000,
+    mask: 0xf000,
+    arguments: [{ mask: 0x0f00, shift: 8 }, { mask: 0x00ff }],
+    //Random
+    executeOn: (cpu, args) => {
+      let random = Math.floor(Math.random() * 0x100);
+      cpu.V[args[0]] = random & args[1];
+    },
+  },
+
   {
     id: "DXYN",
     pattern: 0xd000,

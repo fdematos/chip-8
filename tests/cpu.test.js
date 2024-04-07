@@ -316,12 +316,51 @@ describe("CPU tests", () => {
       expect(cpu.PC).toBe(PCCall + 2);
     });
 
+    test("9XY0 - IF VX NOT EQUALS VY - Should skip the next instruction, Vx not equals Vy", () => {
+      cpu.load([0x9a10]);
+      cpu.V[0xa] = 0x12;
+      cpu.V[0x1] = 0x13;
+      const PCCall = cpu.PC;
+
+      cpu.process();
+      expect(cpu.PC).toBe(PCCall + 4);
+    });
+
+    test("9XY0 - IF VX NOT EQUALS VY - Should not skip the next instruction, Vx equals Vy", () => {
+      cpu.load([0x9a10]);
+      cpu.V[0xa] = 0x12;
+      cpu.V[0x1] = 0x12;
+      const PCCall = cpu.PC;
+
+      cpu.process();
+      expect(cpu.PC).toBe(PCCall + 2);
+    });
+
     test("ANNN - SET REGISTER INDEX - I should equals to address in argument", () => {
       cpu.load([0xa333]);
       const PCCall = cpu.PC;
       cpu.process();
 
       expect(cpu.I).toBe(0x333);
+      expect(cpu.PC).toBe(PCCall + 2);
+    });
+
+    test("BNNN - JUMP TO NNN + V0 - Should set PCC to V0 + NNN", () => {
+      cpu.load([0xb123]);
+      cpu.V[0x0] = 0x2;
+
+      cpu.process();
+
+      expect(cpu.PC).toBe(0x125);
+    });
+
+    test("CXNN - RANDOM - Should generate random number", () => {
+      cpu.load([0xc123]);
+      const PCCall = cpu.PC;
+
+      cpu.process();
+      // Cannot test random, just test VX not equal 0
+      expect(cpu.V[0x1]).not.toBe(0);
       expect(cpu.PC).toBe(PCCall + 2);
     });
 

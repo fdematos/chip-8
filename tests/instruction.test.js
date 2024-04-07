@@ -135,9 +135,32 @@ describe("Decode tests", () => {
     expect(withArgs[0]).toBe(0x7);
   });
 
+  test("9XY0 -IF VX NOT EQUALS VY", () => {
+    const { instruction, withArgs } = opcode.decode(0x97a0);
+    expect(instruction.id).toBe("9XY0");
+    expect(withArgs.length).toBe(2);
+    expect(withArgs[0]).toBe(0x7);
+    expect(withArgs[1]).toBe(0xa);
+  });
+
   test("ANNN - SET INDEX REGISTER", () => {
     const { instruction, withArgs } = opcode.decode(0xa123);
     expect(instruction.id).toBe("ANNN");
+    expect(withArgs[0]).toBe(0x123);
+  });
+
+  test("CXNN - RANDOM", () => {
+    const { instruction, withArgs } = opcode.decode(0xcacf);
+    expect(instruction.id).toBe("CXNN");
+    expect(withArgs.length).toBe(2);
+    expect(withArgs[0]).toBe(0xa);
+    expect(withArgs[1]).toBe(0xcf);
+  });
+
+  test("BNNN - JUMP TO NNN + V0", () => {
+    const { instruction, withArgs } = opcode.decode(0xb123);
+    expect(instruction.id).toBe("BNNN");
+    expect(withArgs.length).toBe(1);
     expect(withArgs[0]).toBe(0x123);
   });
 
