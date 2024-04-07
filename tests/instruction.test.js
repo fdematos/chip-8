@@ -1,6 +1,18 @@
 const opcode = require("../src/instruction");
 
 describe("Decode tests", () => {
+  test("00EE - CALL SUB ROUTINE", () => {
+    const { instruction, withArgs } = opcode.decode(0x00ee);
+    expect(instruction.id).toBe("00EE");
+    expect(withArgs.length).toBe(0);
+  });
+
+  test("00E0 - CLEAR SCREEN", () => {
+    const { instruction, withArgs } = opcode.decode(0x00e0);
+    expect(instruction.id).toBe("00E0");
+    expect(withArgs.length).toBe(0);
+  });
+
   test("1NNN - JUMP", () => {
     const { instruction, withArgs } = opcode.decode(0x1333);
     expect(instruction.id).toBe("1NNN");
@@ -13,16 +25,20 @@ describe("Decode tests", () => {
     expect(withArgs[0]).toBe(0x134);
   });
 
-  test("00EE - CALL SUB ROUTINE", () => {
-    const { instruction, withArgs } = opcode.decode(0x00ee);
-    expect(instruction.id).toBe("00EE");
-    expect(withArgs.length).toBe(0);
+  test("3XNN -IF EQUAL SKIP", () => {
+    const { instruction, withArgs } = opcode.decode(0x3acb);
+    expect(instruction.id).toBe("3XNN");
+    expect(withArgs.length).toBe(2);
+    expect(withArgs[0]).toBe(0xa);
+    expect(withArgs[1]).toBe(0xcb);
   });
 
-  test("00E0 - CLEAR SCREEN", () => {
-    const { instruction, withArgs } = opcode.decode(0x00e0);
-    expect(instruction.id).toBe("00E0");
-    expect(withArgs.length).toBe(0);
+  test("4XNN -IF NOT EQUAL SKIP", () => {
+    const { instruction, withArgs } = opcode.decode(0x4acb);
+    expect(instruction.id).toBe("4XNN");
+    expect(withArgs.length).toBe(2);
+    expect(withArgs[0]).toBe(0xa);
+    expect(withArgs[1]).toBe(0xcb);
   });
 
   test("6XNN - SET VALUE TO REGISTER", () => {

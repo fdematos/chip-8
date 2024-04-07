@@ -1,4 +1,9 @@
-const { MEMORY_START, DISPLAY_HEIGHT, DISPLAY_WIDTH, FONTS } = require("./constants");
+const {
+  MEMORY_START,
+  DISPLAY_HEIGHT,
+  DISPLAY_WIDTH,
+  FONTS,
+} = require("./constants");
 
 const Instruction = require("./instruction");
 
@@ -57,9 +62,9 @@ class CPU {
   load(romData) {
     this.initialize();
 
-    // Load fonts into memory - 0:80 
+    // Load fonts into memory - 0:80
     for (let i = 0; i < FONTS.length; i++) {
-      this.memory[i] = FONTS[i]
+      this.memory[i] = FONTS[i];
     }
 
     // Memory is an 8-bit array and opcodes are 16-bit, each opcode take two case in memory
@@ -70,7 +75,6 @@ class CPU {
       this.memory[MEMORY_START + 2 * i + 1] = romData[i] & 0x00ff;
     }
   }
-  
 
   process() {
     const opCode = this.fetch();

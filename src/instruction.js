@@ -17,8 +17,6 @@ const OP_WITH_IMPACT_ON_PC = [
   "2NNN",
   "00EE",
   "BNNN",
-  "3XNN",
-  "4XNN",
   "5XY0",
   "9XY0",
   "EX9E",
@@ -74,6 +72,28 @@ const OP_CODES = [
     // CLEAR Screen
     executeOn: (cpu, args) => {
       cpu.clearDisplay();
+    },
+  },
+  {
+    id: "3XNN",
+    pattern: 0x3000,
+    mask: 0xf000,
+    arguments: [{ mask: 0x0f00, shift: 8 }, { mask: 0x00ff }],
+    executeOn: (cpu, args) => {
+      if (cpu.V[args[0]] == args[1]) {
+        cpu.nextInstruction();
+      }
+    },
+  },
+  {
+    id: "4XNN",
+    pattern: 0x4000,
+    mask: 0xf000,
+    arguments: [{ mask: 0x0f00, shift: 8 }, { mask: 0x00ff }],
+    executeOn: (cpu, args) => {
+      if (cpu.V[args[0]] != args[1]) {
+        cpu.nextInstruction();
+      }
     },
   },
   {
@@ -179,6 +199,9 @@ const OP_CODES = [
 
 const decode = (opCode) => {
   op = OP_CODES.find((op) => (opCode & op.mask) === op.pattern);
+  if (!op) {
+    throw new Error(`Opcode: ${opCode.toString(16)} not managed`);
+  }
   args = op.arguments.map(
     (arg) => (opCode & arg.mask) >> (arg.shift ? arg.shift : 0)
   );
