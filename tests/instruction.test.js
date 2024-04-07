@@ -149,19 +149,19 @@ describe("Decode tests", () => {
     expect(withArgs[0]).toBe(0x123);
   });
 
+  test("BNNN - JUMP TO NNN + V0", () => {
+    const { instruction, withArgs } = opcode.decode(0xb123);
+    expect(instruction.id).toBe("BNNN");
+    expect(withArgs.length).toBe(1);
+    expect(withArgs[0]).toBe(0x123);
+  });
+
   test("CXNN - RANDOM", () => {
     const { instruction, withArgs } = opcode.decode(0xcacf);
     expect(instruction.id).toBe("CXNN");
     expect(withArgs.length).toBe(2);
     expect(withArgs[0]).toBe(0xa);
     expect(withArgs[1]).toBe(0xcf);
-  });
-
-  test("BNNN - JUMP TO NNN + V0", () => {
-    const { instruction, withArgs } = opcode.decode(0xb123);
-    expect(instruction.id).toBe("BNNN");
-    expect(withArgs.length).toBe(1);
-    expect(withArgs[0]).toBe(0x123);
   });
 
   test("DXYN - DRAW AT", () => {
@@ -171,5 +171,19 @@ describe("Decode tests", () => {
     expect(withArgs[0]).toBe(0x1);
     expect(withArgs[1]).toBe(0x2);
     expect(withArgs[2]).toBe(0x3);
+  });
+
+  test("EX9E - SKIP IF KEY PRESSED", () => {
+    const { instruction, withArgs } = opcode.decode(0xe19e);
+    expect(instruction.id).toBe("EX9E");
+    expect(withArgs.length).toBe(1);
+    expect(withArgs[0]).toBe(0x1);
+  });
+
+  test("EXA1 - SKIP IF KEY NOT PRESSED", () => {
+    const { instruction, withArgs } = opcode.decode(0xe1a1);
+    expect(instruction.id).toBe("EXA1");
+    expect(withArgs.length).toBe(1);
+    expect(withArgs[0]).toBe(0x1);
   });
 });

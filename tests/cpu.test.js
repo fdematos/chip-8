@@ -429,5 +429,45 @@ describe("CPU tests", () => {
         cpu.process();
       }).toThrow(new Error("Memory Overflow"));
     });
+
+    test("EX9E - KEY PRESSED - Should skip the next instruction, Vx equals keypressed", () => {
+      cpu.load([0xea9e]);
+      cpu.V[0xa] = 0x1;
+      cpu.keyPressed = 0x1;
+      const PCCall = cpu.PC;
+
+      cpu.process();
+      expect(cpu.PC).toBe(PCCall + 4);
+    });
+
+    test("EX9E - KEY PRESSED - Should not skip the next instruction, Vx not equals keypressed", () => {
+      cpu.load([0xea9e]);
+      cpu.V[0xa] = 0x1;
+      cpu.keyPressed = 0x2;
+      const PCCall = cpu.PC;
+
+      cpu.process();
+      expect(cpu.PC).toBe(PCCall + 2);
+    });
+
+    test("EXA1 - KEY NOT PRESSED - Should skip the next instruction, Vx not equals keypressed", () => {
+      cpu.load([0xeaa1]);
+      cpu.V[0xa] = 0x1;
+      cpu.keyPressed = 0x2;
+      const PCCall = cpu.PC;
+
+      cpu.process();
+      expect(cpu.PC).toBe(PCCall + 4);
+    });
+
+    test("EXA1 - KEY not PRESSED - Should not skip the next instruction, Vx equals keypressed", () => {
+      cpu.load([0xeaa1]);
+      cpu.V[0xa] = 0x1;
+      cpu.keyPressed = 0x1;
+      const PCCall = cpu.PC;
+
+      cpu.process();
+      expect(cpu.PC).toBe(PCCall + 2);
+    });
   });
 });

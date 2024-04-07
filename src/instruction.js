@@ -13,7 +13,7 @@ VN: One of the 16 available variables. N may be 0 to F (hexadecimal);
 */
 
 // DO NOT MOVE TO NEXT THE INSTRUCTION AFTER THOSE OPCODES
-const OP_WITH_IMPACT_ON_PC = ["1NNN", "2NNN", "00EE", "BNNN", "EX9E", "EXA1"];
+const OP_WITH_IMPACT_ON_PC = ["1NNN", "2NNN", "00EE", "BNNN"];
 
 const OP_CODES = [
   {
@@ -366,6 +366,32 @@ const OP_CODES = [
 
           cpu.setPixel(x, y, newPixel);
         }
+      }
+    },
+  },
+
+  {
+    id: "EX9E",
+    pattern: 0xe09e,
+    mask: 0xf0ff,
+    arguments: [{ mask: 0x0f00, shift: 8 }],
+    // Skip instruction if VX == keyPressed
+    executeOn: (cpu, args) => {
+      if (cpu.V[args[0]] == cpu.keyPressed) {
+        cpu.nextInstruction();
+      }
+    },
+  },
+
+  {
+    id: "EXA1",
+    pattern: 0xe0a1,
+    mask: 0xf0ff,
+    arguments: [{ mask: 0x0f00, shift: 8 }],
+    // Skip instruction if VX != keyPressed
+    executeOn: (cpu, args) => {
+      if (cpu.V[args[0]] != cpu.keyPressed) {
+        cpu.nextInstruction();
       }
     },
   },

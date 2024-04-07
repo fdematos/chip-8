@@ -57,6 +57,7 @@ class CPU {
     this.PC = MEMORY_START;
 
     this.clearDisplay();
+    this.resetKeys();
   }
 
   load(romData) {
@@ -94,7 +95,10 @@ class CPU {
     return (this.memory[this.PC] << 8) | this.memory[this.PC + 1];
   }
 
-  // Display Management
+  /**
+   *  Display Management section
+   */
+
   clearDisplay() {
     this.buffer = Array.from(Array(DISPLAY_WIDTH), () =>
       new Array(DISPLAY_HEIGHT).fill(0)
@@ -107,6 +111,14 @@ class CPU {
 
   setPixel(x, y, value) {
     this.buffer[x][y] = value;
+  }
+
+  /**
+   *  Keyboard Management section
+   */
+
+  resetKeys() {
+    this.keyPressed = undefined;
   }
 }
 
