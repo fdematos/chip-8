@@ -89,11 +89,12 @@ class CPU {
     }
   }
 
-  process() {
-    // TODO
-    // decrement DT
-    // decrement ST
+  // TODO
+  // processDelay()
+  // decrement DT
+  // decrement ST
 
+  process() {
     const opCode = this.fetch();
     const { instruction, withArgs } = Instruction.decode(opCode);
     instruction.executeOn(this, withArgs);
