@@ -220,6 +220,17 @@ const OP_CODES = [
   },
 
   {
+    id: "8XY6",
+    pattern: 0x8006,
+    mask: 0xf00f,
+    arguments: [{ mask: 0x0f00, shift: 8 }],
+    //SHIFT VX Right (divide by 2)
+    executeOn: (cpu, args) => {
+      cpu.V[0xf] = cpu.V[args[0]] & 0x1;
+      cpu.V[args[0]] = cpu.V[args[0]] >> 1;
+    },
+  },
+  {
     id: "8XY7",
     pattern: 0x8007,
     mask: 0xf00f,
@@ -231,6 +242,18 @@ const OP_CODES = [
     executeOn: (cpu, args) => {
       cpu.V[0xf] = cpu.V[args[1]] >= cpu.V[args[0]] ? 1 : 0;
       cpu.V[args[0]] = cpu.V[args[1]] - cpu.V[args[0]];
+    },
+  },
+
+  {
+    id: "8XYE",
+    pattern: 0x800e,
+    mask: 0xf00f,
+    arguments: [{ mask: 0x0f00, shift: 8 }],
+    //SHIFT VX left (multiply by 2)
+    executeOn: (cpu, args) => {
+      cpu.V[0xf] = cpu.V[args[0]] >> 7;
+      cpu.V[args[0]] = cpu.V[args[0]] << 1;
     },
   },
 

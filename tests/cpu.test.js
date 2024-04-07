@@ -270,6 +270,17 @@ describe("CPU tests", () => {
       expect(cpu.PC).toBe(PCCall + 2);
     });
 
+    test("8XY6 - SHIFT VX RIGHT - Divide VX by 2 - Put shifted bit to VF  ", () => {
+      cpu.load([0x8a16]);
+      cpu.V[0xa] = 0x5;
+      const PCCall = cpu.PC;
+
+      cpu.process();
+      expect(cpu.V[0xa]).toBe(0x2);
+      expect(cpu.V[0xf]).toBe(0x1);
+      expect(cpu.PC).toBe(PCCall + 2);
+    });
+
     test("8XY7 - VX = VY - VX - Should assign VX to VY - VX and VF to 1 because VY >= VX  ", () => {
       cpu.load([0x8a17]);
       cpu.V[0xa] = 0x3;
@@ -291,6 +302,17 @@ describe("CPU tests", () => {
       cpu.process();
       expect(cpu.V[0xa]).toBe(0xff);
       expect(cpu.V[0xf]).toBe(0x0);
+      expect(cpu.PC).toBe(PCCall + 2);
+    });
+
+    test("8XYE - SHIFT VX LEFT - Multiply VX by 2 - Put shifted bit to VF  ", () => {
+      cpu.load([0x8a1e]);
+      cpu.V[0xa] = 0xff;
+      const PCCall = cpu.PC;
+
+      cpu.process();
+      expect(cpu.V[0xa]).toBe(0xfe);
+      expect(cpu.V[0xf]).toBe(0x1);
       expect(cpu.PC).toBe(PCCall + 2);
     });
 

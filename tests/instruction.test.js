@@ -113,12 +113,26 @@ describe("Decode tests", () => {
     expect(withArgs[1]).toBe(0xa);
   });
 
+  test("8XY6 - SHIFT VX RIGHT", () => {
+    const { instruction, withArgs } = opcode.decode(0x87a6);
+    expect(instruction.id).toBe("8XY6");
+    expect(withArgs.length).toBe(1);
+    expect(withArgs[0]).toBe(0x7);
+  });
+
   test("8XY7 - SET VX TO VY - VX", () => {
     const { instruction, withArgs } = opcode.decode(0x87a7);
     expect(instruction.id).toBe("8XY7");
     expect(withArgs.length).toBe(2);
     expect(withArgs[0]).toBe(0x7);
     expect(withArgs[1]).toBe(0xa);
+  });
+
+  test("8XYE - SHIFT VX LEFT", () => {
+    const { instruction, withArgs } = opcode.decode(0x87ae);
+    expect(instruction.id).toBe("8XYE");
+    expect(withArgs.length).toBe(1);
+    expect(withArgs[0]).toBe(0x7);
   });
 
   test("ANNN - SET INDEX REGISTER", () => {
