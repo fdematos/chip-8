@@ -19,7 +19,7 @@ function loop() {
 
   for (var x = 0; x < DISPLAY_WIDTH; x++) {
     for (var y = 0; y < DISPLAY_HEIGHT; y++) {
-      const pixel = cpu.display.get(x, y);
+      const pixel = cpu.getPixel(x, y);
       if (pixel == 1) {
         screen.fillRegion(color, "█", x, x + 1, y, y + 1);
       } else {
