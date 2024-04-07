@@ -100,7 +100,7 @@ const OP_CODES = [
   {
     id: "5XY0",
     pattern: 0x5000,
-    mask: 0xf000,
+    mask: 0xf00f,
     arguments: [
       { mask: 0x0f00, shift: 8 },
       { mask: 0x00f0, shift: 4 },
@@ -135,7 +135,7 @@ const OP_CODES = [
   {
     id: "8XY0",
     pattern: 0x8000,
-    mask: 0xf000,
+    mask: 0xf00f,
     arguments: [
       { mask: 0x0f00, shift: 8 },
       { mask: 0x00f0, shift: 4 },
@@ -143,6 +143,94 @@ const OP_CODES = [
     //Set VX to VY
     executeOn: (cpu, args) => {
       cpu.V[args[0]] = cpu.V[args[1]];
+    },
+  },
+
+  {
+    id: "8XY1",
+    pattern: 0x8001,
+    mask: 0xf00f,
+    arguments: [
+      { mask: 0x0f00, shift: 8 },
+      { mask: 0x00f0, shift: 4 },
+    ],
+    //Set VX to VY | VX
+    executeOn: (cpu, args) => {
+      cpu.V[args[0]] |= cpu.V[args[1]];
+    },
+  },
+
+  {
+    id: "8XY2",
+    pattern: 0x8002,
+    mask: 0xf00f,
+    arguments: [
+      { mask: 0x0f00, shift: 8 },
+      { mask: 0x00f0, shift: 4 },
+    ],
+    //Set VX to VY & VX
+    executeOn: (cpu, args) => {
+      cpu.V[args[0]] &= cpu.V[args[1]];
+    },
+  },
+
+  {
+    id: "8XY3",
+    pattern: 0x8003,
+    mask: 0xf00f,
+    arguments: [
+      { mask: 0x0f00, shift: 8 },
+      { mask: 0x00f0, shift: 4 },
+    ],
+    //Set VX to VX ^ VY
+    executeOn: (cpu, args) => {
+      cpu.V[args[0]] ^= cpu.V[args[1]];
+    },
+  },
+
+  {
+    id: "8XY4",
+    pattern: 0x8004,
+    mask: 0xf00f,
+    arguments: [
+      { mask: 0x0f00, shift: 8 },
+      { mask: 0x00f0, shift: 4 },
+    ],
+    //Set VX to VX + VY
+    executeOn: (cpu, args) => {
+      // Put the carry in VF
+      cpu.V[0xf] = cpu.V[args[0]] + cpu.V[args[1]] > 0xff ? 1 : 0;
+      cpu.V[args[0]] += cpu.V[args[1]];
+    },
+  },
+
+  {
+    id: "8XY5",
+    pattern: 0x8005,
+    mask: 0xf00f,
+    arguments: [
+      { mask: 0x0f00, shift: 8 },
+      { mask: 0x00f0, shift: 4 },
+    ],
+    //Set VX to VX - VY
+    executeOn: (cpu, args) => {
+      cpu.V[0xf] = cpu.V[args[0]] >= cpu.V[args[1]] ? 1 : 0;
+      cpu.V[args[0]] -= cpu.V[args[1]];
+    },
+  },
+
+  {
+    id: "8XY7",
+    pattern: 0x8007,
+    mask: 0xf00f,
+    arguments: [
+      { mask: 0x0f00, shift: 8 },
+      { mask: 0x00f0, shift: 4 },
+    ],
+    //Set VX to VX - VY
+    executeOn: (cpu, args) => {
+      cpu.V[0xf] = cpu.V[args[1]] >= cpu.V[args[0]] ? 1 : 0;
+      cpu.V[args[0]] = cpu.V[args[1]] - cpu.V[args[0]];
     },
   },
 

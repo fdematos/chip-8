@@ -189,6 +189,111 @@ describe("CPU tests", () => {
       expect(cpu.PC).toBe(PCCall + 2);
     });
 
+    test("8XY1 - VX |= VY - Should assign VX to VX bitwise OR VY", () => {
+      cpu.load([0x8a11]);
+      cpu.V[0xa] = 0x12;
+      cpu.V[0x1] = 0x13;
+      const PCCall = cpu.PC;
+
+      cpu.process();
+      expect(cpu.V[0xa]).toBe(0x12 | 0x13);
+      expect(cpu.PC).toBe(PCCall + 2);
+    });
+
+    test("8XY2 - VX &= VY - Should assign VX to VX bitwise AND VY", () => {
+      cpu.load([0x8a12]);
+      cpu.V[0xa] = 0x2;
+      cpu.V[0x1] = 0x0;
+      const PCCall = cpu.PC;
+
+      cpu.process();
+      expect(cpu.V[0xa]).toBe(0x2 & 0x0);
+      expect(cpu.PC).toBe(PCCall + 2);
+    });
+
+    test("8XY3 - VX &= VY - Should assign VX to with VX bitwise XOR VY", () => {
+      cpu.load([0x8a13]);
+      cpu.V[0xa] = 0x3;
+      cpu.V[0x1] = 0x3;
+      const PCCall = cpu.PC;
+
+      cpu.process();
+      expect(cpu.V[0xa]).toBe(0x3 ^ 0x3);
+      expect(cpu.PC).toBe(PCCall + 2);
+    });
+
+    test("8XY4 - VX = VX + VY - Should assign VX to VX + VY and VF to 0 because result <= 255", () => {
+      cpu.load([0x8a14]);
+      cpu.V[0xa] = 0x3;
+      cpu.V[0x1] = 0x3;
+      const PCCall = cpu.PC;
+
+      cpu.process();
+      expect(cpu.V[0xa]).toBe(0x3 + 0x3);
+      expect(cpu.V[0xf]).toBe(0x0);
+      expect(cpu.PC).toBe(PCCall + 2);
+    });
+
+    test("8XY4 - VX = VX + VY - Should assign VX TO VX + VY and VF to 1 because result > 255", () => {
+      cpu.load([0x8a14]);
+      cpu.V[0xa] = 0xff;
+      cpu.V[0x1] = 0xff;
+      const PCCall = cpu.PC;
+
+      cpu.process();
+      expect(cpu.V[0xa]).toBe(0xfe);
+      expect(cpu.V[0xf]).toBe(0x1);
+      expect(cpu.PC).toBe(PCCall + 2);
+    });
+
+    test("8XY5 - VX = VX - VY - Should assign VX to VX - VY and VF to 1 because VX >= VY  ", () => {
+      cpu.load([0x8a15]);
+      cpu.V[0xa] = 0x3;
+      cpu.V[0x1] = 0x3;
+      const PCCall = cpu.PC;
+
+      cpu.process();
+      expect(cpu.V[0xa]).toBe(0x0);
+      expect(cpu.V[0xf]).toBe(0x1);
+      expect(cpu.PC).toBe(PCCall + 2);
+    });
+
+    test("8XY5 - VX = VX - VY - Should assign VX to VX - VY and VF to 0 because VX < VY  ", () => {
+      cpu.load([0x8a15]);
+      cpu.V[0xa] = 0x2;
+      cpu.V[0x1] = 0x3;
+      const PCCall = cpu.PC;
+
+      cpu.process();
+      expect(cpu.V[0xa]).toBe(0xff);
+      expect(cpu.V[0xf]).toBe(0x0);
+      expect(cpu.PC).toBe(PCCall + 2);
+    });
+
+    test("8XY7 - VX = VY - VX - Should assign VX to VY - VX and VF to 1 because VY >= VX  ", () => {
+      cpu.load([0x8a17]);
+      cpu.V[0xa] = 0x3;
+      cpu.V[0x1] = 0x3;
+      const PCCall = cpu.PC;
+
+      cpu.process();
+      expect(cpu.V[0xa]).toBe(0x0);
+      expect(cpu.V[0xf]).toBe(0x1);
+      expect(cpu.PC).toBe(PCCall + 2);
+    });
+
+    test("8XY7 - VX = VY - VX - Should assign VX to VY - VX and VF to 1 because VY < VX  ", () => {
+      cpu.load([0x8a17]);
+      cpu.V[0xa] = 0x3;
+      cpu.V[0x1] = 0x2;
+      const PCCall = cpu.PC;
+
+      cpu.process();
+      expect(cpu.V[0xa]).toBe(0xff);
+      expect(cpu.V[0xf]).toBe(0x0);
+      expect(cpu.PC).toBe(PCCall + 2);
+    });
+
     test("ANNN - SET REGISTER INDEX - I should equals to address in argument", () => {
       cpu.load([0xa333]);
       const PCCall = cpu.PC;

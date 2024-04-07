@@ -73,6 +73,54 @@ describe("Decode tests", () => {
     expect(withArgs[1]).toBe(0xa);
   });
 
+  test("8XY1 - SET VX TO VX bitwise OR VY", () => {
+    const { instruction, withArgs } = opcode.decode(0x87a1);
+    expect(instruction.id).toBe("8XY1");
+    expect(withArgs.length).toBe(2);
+    expect(withArgs[0]).toBe(0x7);
+    expect(withArgs[1]).toBe(0xa);
+  });
+
+  test("8XY2 - SET VX TO VX bitwise AND VY", () => {
+    const { instruction, withArgs } = opcode.decode(0x87a2);
+    expect(instruction.id).toBe("8XY2");
+    expect(withArgs.length).toBe(2);
+    expect(withArgs[0]).toBe(0x7);
+    expect(withArgs[1]).toBe(0xa);
+  });
+
+  test("8XY3 - SET VX TO VX bitwise XOR VY", () => {
+    const { instruction, withArgs } = opcode.decode(0x87a3);
+    expect(instruction.id).toBe("8XY3");
+    expect(withArgs.length).toBe(2);
+    expect(withArgs[0]).toBe(0x7);
+    expect(withArgs[1]).toBe(0xa);
+  });
+
+  test("8XY4 - SET VX TO VX + VY", () => {
+    const { instruction, withArgs } = opcode.decode(0x87a4);
+    expect(instruction.id).toBe("8XY4");
+    expect(withArgs.length).toBe(2);
+    expect(withArgs[0]).toBe(0x7);
+    expect(withArgs[1]).toBe(0xa);
+  });
+
+  test("8XY5 - SET VX TO VX - VY", () => {
+    const { instruction, withArgs } = opcode.decode(0x87a5);
+    expect(instruction.id).toBe("8XY5");
+    expect(withArgs.length).toBe(2);
+    expect(withArgs[0]).toBe(0x7);
+    expect(withArgs[1]).toBe(0xa);
+  });
+
+  test("8XY7 - SET VX TO VY - VX", () => {
+    const { instruction, withArgs } = opcode.decode(0x87a7);
+    expect(instruction.id).toBe("8XY7");
+    expect(withArgs.length).toBe(2);
+    expect(withArgs[0]).toBe(0x7);
+    expect(withArgs[1]).toBe(0xa);
+  });
+
   test("ANNN - SET INDEX REGISTER", () => {
     const { instruction, withArgs } = opcode.decode(0xa123);
     expect(instruction.id).toBe("ANNN");
