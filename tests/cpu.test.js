@@ -105,7 +105,7 @@ describe("CPU tests", () => {
       expect(cpu.PC).toBe(PCCall + 2);
     });
 
-    test("0x3XNN - IF EQUALS - Should skip the next instruction, Vx equals NN", () => {
+    test("3XNN - IF EQUALS - Should skip the next instruction, Vx equals NN", () => {
       cpu.load([0x3a12]);
       cpu.V[0xa] = 0x12;
       const PCCall = cpu.PC;
@@ -114,7 +114,7 @@ describe("CPU tests", () => {
       expect(cpu.PC).toBe(PCCall + 4);
     });
 
-    test("0x3XNN - IF EQUALS - Should do nothing, Vx not equals NN", () => {
+    test("3XNN - IF EQUALS - Should do nothing, Vx not equals NN", () => {
       cpu.load([0x3a12]);
       const PCCall = cpu.PC;
 
@@ -122,7 +122,7 @@ describe("CPU tests", () => {
       expect(cpu.PC).toBe(PCCall + 2);
     });
 
-    test("0x4XNN - IF NOT EQUALS- Should skip the next instruction, Vx not equals NN", () => {
+    test("4XNN - IF NOT EQUALS- Should skip the next instruction, Vx not equals NN", () => {
       cpu.load([0x4a12]);
       cpu.V[0xa] = 0x12;
       const PCCall = cpu.PC;
@@ -131,7 +131,7 @@ describe("CPU tests", () => {
       expect(cpu.PC).toBe(PCCall + 2);
     });
 
-    test("0x4XNN - IF NOT EQUALS - Should do nothing, Vx equals NN", () => {
+    test("4XNN - IF NOT EQUALS - Should do nothing, Vx equals NN", () => {
       cpu.load([0x4a12]);
       const PCCall = cpu.PC;
 
@@ -139,7 +139,7 @@ describe("CPU tests", () => {
       expect(cpu.PC).toBe(PCCall + 4);
     });
 
-    test("0x5XY0 - IF VX EQUALS VY - Should skip the next instruction, Vx equals Vy", () => {
+    test("5XY0 - IF VX EQUALS VY - Should skip the next instruction, Vx equals Vy", () => {
       cpu.load([0x5a10]);
       cpu.V[0xa] = 0x12;
       cpu.V[0x1] = 0x12;
@@ -149,7 +149,7 @@ describe("CPU tests", () => {
       expect(cpu.PC).toBe(PCCall + 4);
     });
 
-    test("0x5XY0 - IF VX EQUALS VY - Should not skip the next instruction, Vx not equals Vy", () => {
+    test("5XY0 - IF VX EQUALS VY - Should not skip the next instruction, Vx not equals Vy", () => {
       cpu.load([0x5a10]);
       cpu.V[0xa] = 0x12;
       cpu.V[0x1] = 0x13;
@@ -159,7 +159,7 @@ describe("CPU tests", () => {
       expect(cpu.PC).toBe(PCCall + 2);
     });
 
-    test("0x6XNN - SET TO Vx - Should set value to vx", () => {
+    test("6XNN - SET TO Vx - Should set value to vx", () => {
       cpu.load([0x6a3f]);
       const PCCall = cpu.PC;
       cpu.process();
@@ -168,13 +168,24 @@ describe("CPU tests", () => {
       expect(cpu.PC).toBe(PCCall + 2);
     });
 
-    test("0x7XNN - ADD TO Vx - Should set value to vx", () => {
+    test("7XNN - ADD TO Vx - Should set value to vx", () => {
       cpu.load([0x7a31]);
       cpu.V[0xa] = 0x2;
       const PCCall = cpu.PC;
       cpu.process();
 
       expect(cpu.V[0xa]).toBe(0x33);
+      expect(cpu.PC).toBe(PCCall + 2);
+    });
+
+    test("8XY0 - VX = VY - Should assign VY to VX", () => {
+      cpu.load([0x8a10]);
+      cpu.V[0xa] = 0x12;
+      cpu.V[0x1] = 0x13;
+      const PCCall = cpu.PC;
+
+      cpu.process();
+      expect(cpu.V[0xa]).toBe(0x13);
       expect(cpu.PC).toBe(PCCall + 2);
     });
 

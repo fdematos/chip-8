@@ -133,6 +133,20 @@ const OP_CODES = [
     },
   },
   {
+    id: "8XY0",
+    pattern: 0x8000,
+    mask: 0xf000,
+    arguments: [
+      { mask: 0x0f00, shift: 8 },
+      { mask: 0x00f0, shift: 4 },
+    ],
+    //Set VX to VY
+    executeOn: (cpu, args) => {
+      cpu.V[args[0]] = cpu.V[args[1]];
+    },
+  },
+
+  {
     id: "ANNN",
     pattern: 0xa000,
     mask: 0xf000,

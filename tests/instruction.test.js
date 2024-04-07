@@ -65,6 +65,14 @@ describe("Decode tests", () => {
     expect(withArgs[1]).toBe(0xcf);
   });
 
+  test("8XY0 - SET VX TO VY", () => {
+    const { instruction, withArgs } = opcode.decode(0x87a0);
+    expect(instruction.id).toBe("8XY0");
+    expect(withArgs.length).toBe(2);
+    expect(withArgs[0]).toBe(0x7);
+    expect(withArgs[1]).toBe(0xa);
+  });
+
   test("ANNN - SET INDEX REGISTER", () => {
     const { instruction, withArgs } = opcode.decode(0xa123);
     expect(instruction.id).toBe("ANNN");
