@@ -4,18 +4,26 @@ const {
   MEMORY_START,
   DISPLAY_WIDTH,
   DISPLAY_HEIGHT,
+  FONTS
 } = require("../src/constants");
 
 const cpu = new CPU();
 
 describe("CPU tests", () => {
   describe("Memory test", () => {
-    test("load(romData) -  Should initalize memory with rom data", () => {
+
+    test("load(romData) -  Should load Fonts at first memory bytse", () => {
       cpu.load([0x1333, 0x1fc2]);
 
-      for (var i = 0; i < MEMORY_START; i++) {
-        expect(cpu.memory[i]).toBe(0);
+      for (var i = 0; i < FONTS.length; i++) {
+        expect(cpu.memory[i]).toBe(FONTS[i]);
       }
+    
+    });
+
+    test("load(romData) -  Should initalize memory with rom data starting 0x200. Previous block are reserved ", () => {
+      cpu.load([0x1333, 0x1fc2]);
+
       expect(cpu.memory[MEMORY_START]).toBe(0x13);
       expect(cpu.memory[MEMORY_START + 1]).toBe(0x33);
 
