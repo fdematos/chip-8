@@ -25,7 +25,7 @@ describe("Decode tests", () => {
     expect(withArgs[0]).toBe(0x134);
   });
 
-  test("3XNN -IF EQUAL SKIP", () => {
+  test("3XNN -IF EQUAL", () => {
     const { instruction, withArgs } = opcode.decode(0x3acb);
     expect(instruction.id).toBe("3XNN");
     expect(withArgs.length).toBe(2);
@@ -33,12 +33,20 @@ describe("Decode tests", () => {
     expect(withArgs[1]).toBe(0xcb);
   });
 
-  test("4XNN -IF NOT EQUAL SKIP", () => {
+  test("4XNN -IF NOT EQUALS", () => {
     const { instruction, withArgs } = opcode.decode(0x4acb);
     expect(instruction.id).toBe("4XNN");
     expect(withArgs.length).toBe(2);
     expect(withArgs[0]).toBe(0xa);
     expect(withArgs[1]).toBe(0xcb);
+  });
+
+  test("5XY0 -IF VX EQUALS VY", () => {
+    const { instruction, withArgs } = opcode.decode(0x57a0);
+    expect(instruction.id).toBe("5XY0");
+    expect(withArgs.length).toBe(2);
+    expect(withArgs[0]).toBe(0x7);
+    expect(withArgs[1]).toBe(0xa);
   });
 
   test("6XNN - SET VALUE TO REGISTER", () => {

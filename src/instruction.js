@@ -17,7 +17,6 @@ const OP_WITH_IMPACT_ON_PC = [
   "2NNN",
   "00EE",
   "BNNN",
-  "5XY0",
   "9XY0",
   "EX9E",
   "EXA1",
@@ -79,6 +78,7 @@ const OP_CODES = [
     pattern: 0x3000,
     mask: 0xf000,
     arguments: [{ mask: 0x0f00, shift: 8 }, { mask: 0x00ff }],
+    // IF VX equals NN then skip
     executeOn: (cpu, args) => {
       if (cpu.V[args[0]] == args[1]) {
         cpu.nextInstruction();
@@ -90,8 +90,24 @@ const OP_CODES = [
     pattern: 0x4000,
     mask: 0xf000,
     arguments: [{ mask: 0x0f00, shift: 8 }, { mask: 0x00ff }],
+    // IF VX not equals NN then skip
     executeOn: (cpu, args) => {
       if (cpu.V[args[0]] != args[1]) {
+        cpu.nextInstruction();
+      }
+    },
+  },
+  {
+    id: "5XY0",
+    pattern: 0x5000,
+    mask: 0xf000,
+    arguments: [
+      { mask: 0x0f00, shift: 8 },
+      { mask: 0x00f0, shift: 4 },
+    ],
+    // IF VX not equals VY then skip
+    executeOn: (cpu, args) => {
+      if (cpu.V[args[0]] == cpu.V[args[1]]) {
         cpu.nextInstruction();
       }
     },
