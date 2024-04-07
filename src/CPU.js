@@ -56,6 +56,18 @@ class CPU {
      */
     this.PC = MEMORY_START;
 
+    /**
+     * DT: The Delay Timer is a timer that decrements at a rate of 60 Hz (or 60 times per second) when it is set.
+     * It's often used in Chip-8 programs for timing purposes, such as creating delays or implementing game mechanics that rely on timing.
+     */
+    this.DT = 0;
+
+    /**
+     * ST: Sound Timer functions similarly to the Delay Timer, decrementing at a rate of 60 Hz when it is set.
+     * However, unlike the Delay Timer which is used for timing purposes, the Sound Timer is used to generate sound.
+     */
+    this.ST = 0;
+
     this.clearDisplay();
     this.resetKeys();
   }

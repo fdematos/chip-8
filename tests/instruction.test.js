@@ -186,4 +186,25 @@ describe("Decode tests", () => {
     expect(withArgs.length).toBe(1);
     expect(withArgs[0]).toBe(0x1);
   });
+
+  test("FX07 - SET VX TO DT", () => {
+    const { instruction, withArgs } = opcode.decode(0xf107);
+    expect(instruction.id).toBe("FX07");
+    expect(withArgs.length).toBe(1);
+    expect(withArgs[0]).toBe(0x1);
+  });
+
+  test("FX15 - SET DT TO VX", () => {
+    const { instruction, withArgs } = opcode.decode(0xf115);
+    expect(instruction.id).toBe("FX15");
+    expect(withArgs.length).toBe(1);
+    expect(withArgs[0]).toBe(0x1);
+  });
+
+  test("FX18 - SET DT TO VX", () => {
+    const { instruction, withArgs } = opcode.decode(0xf118);
+    expect(instruction.id).toBe("FX18");
+    expect(withArgs.length).toBe(1);
+    expect(withArgs[0]).toBe(0x1);
+  });
 });

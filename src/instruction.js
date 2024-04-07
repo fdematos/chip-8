@@ -395,6 +395,39 @@ const OP_CODES = [
       }
     },
   },
+
+  {
+    id: "FX07",
+    pattern: 0xf007,
+    mask: 0xf0ff,
+    arguments: [{ mask: 0x0f00, shift: 8 }],
+    // SET VX TO DT
+    executeOn: (cpu, args) => {
+      cpu.V[args[0]] = cpu.DT;
+    },
+  },
+
+  {
+    id: "FX15",
+    pattern: 0xf015,
+    mask: 0xf0ff,
+    arguments: [{ mask: 0x0f00, shift: 8 }],
+    // SET DT TO VX
+    executeOn: (cpu, args) => {
+      cpu.DT = cpu.V[args[0]];
+    },
+  },
+
+  {
+    id: "FX18",
+    pattern: 0xf018,
+    mask: 0xf0ff,
+    arguments: [{ mask: 0x0f00, shift: 8 }],
+    // SET ST TO VX
+    executeOn: (cpu, args) => {
+      cpu.ST = cpu.V[args[0]];
+    },
+  },
 ];
 
 const decode = (opCode) => {

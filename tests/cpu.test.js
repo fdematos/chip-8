@@ -469,5 +469,35 @@ describe("CPU tests", () => {
       cpu.process();
       expect(cpu.PC).toBe(PCCall + 2);
     });
+
+    test("FX07 - SET VX TO DT - Should set VX to DT value", () => {
+      cpu.load([0xfa07]);
+      const PCCall = cpu.PC;
+      cpu.DT = 0x12;
+
+      cpu.process();
+      expect(cpu.V[0xa]).toBe(cpu.DT);
+      expect(cpu.PC).toBe(PCCall + 2);
+    });
+
+    test("FX15 - SET DT TO VX - Should set DT to DX value", () => {
+      cpu.load([0xfa15]);
+      const PCCall = cpu.PC;
+      cpu.V[0xa] = 0xff;
+
+      cpu.process();
+      expect(cpu.DT).toBe(cpu.V[0xa]);
+      expect(cpu.PC).toBe(PCCall + 2);
+    });
+
+    test("FX18 - SET ST TO VX - Should set ST to DX value", () => {
+      cpu.load([0xfa18]);
+      const PCCall = cpu.PC;
+      cpu.V[0xa] = 0xff;
+
+      cpu.process();
+      expect(cpu.ST).toBe(cpu.V[0xa]);
+      expect(cpu.PC).toBe(PCCall + 2);
+    });
   });
 });
