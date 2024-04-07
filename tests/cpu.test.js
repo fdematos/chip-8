@@ -480,6 +480,25 @@ describe("CPU tests", () => {
       expect(cpu.PC).toBe(PCCall + 2);
     });
 
+    test("FX0A - WAIT FOR KEYPRESS - Should do nothing if no key pressed", () => {
+      cpu.load([0xfa0a]);
+      cpu.keyPressed = undefined;
+      const PCCall = cpu.PC;
+
+      cpu.process();
+      expect(cpu.PC).toBe(PCCall);
+    });
+
+    test("FX0A - WAIT FOR KEYPRESS - Should put keypressed in VX", () => {
+      cpu.load([0xfa0a]);
+      cpu.keyPressed = 0x2;
+      const PCCall = cpu.PC;
+
+      cpu.process();
+      expect(cpu.V[0xa]).toBe(0x2);
+      expect(cpu.PC).toBe(PCCall + 2);
+    });
+
     test("FX15 - SET DT TO VX - Should set DT to DX value", () => {
       cpu.load([0xfa15]);
       const PCCall = cpu.PC;

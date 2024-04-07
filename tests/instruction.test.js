@@ -194,6 +194,13 @@ describe("Decode tests", () => {
     expect(withArgs[0]).toBe(0x1);
   });
 
+  test("FX0A - WAIT FOR KEYPRESS", () => {
+    const { instruction, withArgs } = opcode.decode(0xf10a);
+    expect(instruction.id).toBe("FX0A");
+    expect(withArgs.length).toBe(1);
+    expect(withArgs[0]).toBe(0x1);
+  });
+
   test("FX15 - SET DT TO VX", () => {
     const { instruction, withArgs } = opcode.decode(0xf115);
     expect(instruction.id).toBe("FX15");

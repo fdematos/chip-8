@@ -13,7 +13,7 @@ VN: One of the 16 available variables. N may be 0 to F (hexadecimal);
 */
 
 // DO NOT MOVE TO NEXT THE INSTRUCTION AFTER THOSE OPCODES
-const OP_WITH_IMPACT_ON_PC = ["1NNN", "2NNN", "00EE", "BNNN"];
+const OP_WITH_IMPACT_ON_PC = ["1NNN", "2NNN", "00EE", "BNNN", "FX0A"];
 
 const OP_CODES = [
   {
@@ -404,6 +404,20 @@ const OP_CODES = [
     // SET VX TO DT
     executeOn: (cpu, args) => {
       cpu.V[args[0]] = cpu.DT;
+    },
+  },
+
+  {
+    id: "FX0A",
+    pattern: 0xf00a,
+    mask: 0xf0ff,
+    arguments: [{ mask: 0x0f00, shift: 8 }],
+    // SET VX TO DT
+    executeOn: (cpu, args) => {
+      if (cpu.keyPressed != undefined) {
+        cpu.V[args[0]] = cpu.keyPressed;
+        cpu.nextInstruction();
+      }
     },
   },
 
