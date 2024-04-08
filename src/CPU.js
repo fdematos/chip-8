@@ -89,10 +89,10 @@ class CPU {
     }
   }
 
-  // TODO
-  // processDelay()
-  // decrement DT
-  // decrement ST
+  timer() {
+    if (this.DT > 0) this.DT--;
+    if (this.ST > 0) this.ST--;
+  }
 
   process() {
     const opCode = this.fetch();

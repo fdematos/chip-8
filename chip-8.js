@@ -15,6 +15,7 @@ cpu.load(romData);
 
 function loop() {
   screen.clearRegion(0, DISPLAY_WIDTH, 0, DISPLAY_HEIGHT);
+  cpu.timer();
   cpu.process();
 
   for (var x = 0; x < DISPLAY_WIDTH; x++) {
