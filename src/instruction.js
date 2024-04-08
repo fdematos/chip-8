@@ -457,6 +457,7 @@ const OP_CODES = [
       cpu.I &= 0xffff;
     },
   },
+
   {
     id: "FX29",
     pattern: 0xf029,
@@ -466,6 +467,21 @@ const OP_CODES = [
     executeOn: (cpu, args) => {
       // Each sprite is 5 bytes long
       cpu.I = cpu.V[args[0]] * 5;
+    },
+  },
+
+  {
+    id: "FX33",
+    pattern: 0xf033,
+    mask: 0xf0ff,
+    arguments: [{ mask: 0x0f00, shift: 8 }],
+    // load BCD representation
+    executeOn: (cpu, args) => {
+      const value = cpu.V[args[0]];
+
+      cpu.memory[cpu.I] = Math.floor(value / 100); // Hundreds place
+      cpu.memory[cpu.I + 1] = Math.floor((value % 100) / 10); // Tens place
+      cpu.memory[cpu.I + 2] = value % 10; // Ones place
     },
   },
 ];

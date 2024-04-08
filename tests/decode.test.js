@@ -228,4 +228,11 @@ describe("Decode tests", () => {
     expect(withArgs.length).toBe(1);
     expect(withArgs[0]).toBe(0x1);
   });
+
+  test("FX33 - BINARY CODED DECIMAL CONVERSION", () => {
+    const { instruction, withArgs } = opcode.decode(0xf133);
+    expect(instruction.id).toBe("FX33");
+    expect(withArgs.length).toBe(1);
+    expect(withArgs[0]).toBe(0x1);
+  });
 });

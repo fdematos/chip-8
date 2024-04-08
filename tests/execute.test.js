@@ -512,4 +512,26 @@ describe("OP Codes tests", () => {
 
     expect(cpu.I).toBe(0xd * 5);
   });
+
+  test("FX33 - Should load BCD representation of VX into memory I, I+1, I+2 for 123", () => {
+    cpu.load([0xfa33]);
+    cpu.V[0xa] = 0x7b;
+    cpu.I = 0x400;
+    cpu.process();
+
+    expect(cpu.memory[0x400]).toBe(1);
+    expect(cpu.memory[0x401]).toBe(2);
+    expect(cpu.memory[0x402]).toBe(3);
+  });
+
+  test("FX33 - Should load BCD representation of VX into memory I, I+1, I+2 for 5 ", () => {
+    cpu.load([0xfa33]);
+    cpu.V[0xa] = 0x05;
+    cpu.I = 0x400;
+    cpu.process();
+
+    expect(cpu.memory[0x400]).toBe(0);
+    expect(cpu.memory[0x401]).toBe(0);
+    expect(cpu.memory[0x402]).toBe(5);
+  });
 });
