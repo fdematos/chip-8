@@ -235,4 +235,18 @@ describe("Decode tests", () => {
     expect(withArgs.length).toBe(1);
     expect(withArgs[0]).toBe(0x1);
   });
+
+  test("FX55 - REG DUMP", () => {
+    const { instruction, withArgs } = opcode.decode(0xf155);
+    expect(instruction.id).toBe("FX55");
+    expect(withArgs.length).toBe(1);
+    expect(withArgs[0]).toBe(0x1);
+  });
+
+  test("FX65 -REG LOAD", () => {
+    const { instruction, withArgs } = opcode.decode(0xf165);
+    expect(instruction.id).toBe("FX65");
+    expect(withArgs.length).toBe(1);
+    expect(withArgs[0]).toBe(0x1);
+  });
 });

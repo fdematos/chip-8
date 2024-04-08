@@ -484,6 +484,32 @@ const OP_CODES = [
       cpu.memory[cpu.I + 2] = value % 10; // Ones place
     },
   },
+
+  {
+    id: "FX55",
+    pattern: 0xf055,
+    mask: 0xf0ff,
+    arguments: [{ mask: 0x0f00, shift: 8 }],
+    // REG DUMP
+    executeOn: (cpu, args) => {
+      for (let i = 0; i <= args[0]; i++) {
+        cpu.memory[cpu.I + i] = cpu.V[i];
+      }
+    },
+  },
+
+  {
+    id: "FX65",
+    pattern: 0xf065,
+    mask: 0xf0ff,
+    arguments: [{ mask: 0x0f00, shift: 8 }],
+    // REG LOAD
+    executeOn: (cpu, args) => {
+      for (let i = 0; i <= args[0]; i++) {
+        cpu.V[i] = cpu.memory[cpu.I + i];
+      }
+    },
+  },
 ];
 
 const decode = (opCode) => {

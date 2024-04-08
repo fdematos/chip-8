@@ -534,4 +534,30 @@ describe("OP Codes tests", () => {
     expect(cpu.memory[0x401]).toBe(0);
     expect(cpu.memory[0x402]).toBe(5);
   });
+
+  test("FX55 - Should store V0 to VX value to memory starting at I ", () => {
+    cpu.load([0xf255]);
+    cpu.V[0x0] = 0x02;
+    cpu.V[0x1] = 0x04;
+    cpu.V[0x2] = 0x06;
+    cpu.I = 0x400;
+    cpu.process();
+
+    expect(cpu.memory[0x400]).toBe(2);
+    expect(cpu.memory[0x401]).toBe(4);
+    expect(cpu.memory[0x402]).toBe(6);
+  });
+
+  test("FX65 - Should load set V0 to VX with memory value starting at I ", () => {
+    cpu.load([0xf265]);
+    cpu.memory[0x400] = 0x02;
+    cpu.memory[0x401] = 0x04;
+    cpu.memory[0x402] = 0x06;
+    cpu.I = 0x400;
+    cpu.process();
+
+    expect(cpu.V[0x0]).toBe(2);
+    expect(cpu.V[0x1]).toBe(4);
+    expect(cpu.V[0x2]).toBe(6);
+  });
 });
