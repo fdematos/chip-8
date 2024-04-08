@@ -504,4 +504,12 @@ describe("OP Codes tests", () => {
     expect(cpu.V[0xf]).toBe(0x1);
     expect(cpu.PC).toBe(PCCall + 2);
   });
+
+  test("FX29 - should set I to the location of the Sprite for digit in register x", () => {
+    cpu.load([0xfa29]);
+    cpu.V[0xa] = 0xd;
+    cpu.process();
+
+    expect(cpu.I).toBe(0xd * 5);
+  });
 });

@@ -457,6 +457,17 @@ const OP_CODES = [
       cpu.I &= 0xffff;
     },
   },
+  {
+    id: "FX29",
+    pattern: 0xf029,
+    mask: 0xf0ff,
+    arguments: [{ mask: 0x0f00, shift: 8 }],
+    // SET I to I + VX
+    executeOn: (cpu, args) => {
+      // Each sprite is 5 bytes long
+      cpu.I = cpu.V[args[0]] * 5;
+    },
+  },
 ];
 
 const decode = (opCode) => {

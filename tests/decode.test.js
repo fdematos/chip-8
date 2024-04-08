@@ -221,4 +221,11 @@ describe("Decode tests", () => {
     expect(withArgs.length).toBe(1);
     expect(withArgs[0]).toBe(0x1);
   });
+
+  test("FX29 - I SET TO SPRITE ADDRESS", () => {
+    const { instruction, withArgs } = opcode.decode(0xf129);
+    expect(instruction.id).toBe("FX29");
+    expect(withArgs.length).toBe(1);
+    expect(withArgs[0]).toBe(0x1);
+  });
 });
