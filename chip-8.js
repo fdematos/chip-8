@@ -8,7 +8,7 @@ const screen = blessed.screen({ smartCSR: true });
 screen.title = "Chip8.js";
 color = blessed.helpers.attrToBinary({ fg: "#33ff66" });
 
-const romData = rom.loadFromFile("./roms/games/INVADERS.ch8");
+const romData = rom.loadFromFile("./roms/games/Breakout.ch8");
 
 const cpu = new CPU();
 
