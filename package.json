@@ -1,22 +1,22 @@
 {
-  "name": "gurr8",
+  "name": "chip-8",
   "version": "1.0.0",
   "description": "A chip 8 emulator",
-  "main": "run.js",
+  "main": "chip-8.js",
   "scripts": {
     "test": "jest",
     "start": "node chip-8.js"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/fdematos/gurr8.git"
+    "url": "git+https://github.com/fdematos/chip-8.git"
   },
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/fdematos/gurr8/issues"
+    "url": "https://github.com/fdematos/chip-8/issues"
   },
-  "homepage": "https://github.com/fdematos/gurr8#readme",
+  "homepage": "https://github.com/fdematos/chip-8#readme",
   "devDependencies": {
     "jest": "^29.7.0"
   },
